@@ -27,14 +27,8 @@ exports.sendWebhook = async (req, res) => {
 };
 
 exports.newUserCreated = async (req, res) => {
-  try {
     const payload = req.body;
     console.log("New User Created in Docebo:", payload);
 
-    // await sendOutgoingData(payload);
     res.status(200).send({ status: "success", message: "New user created" });
-  } catch (error) {
-    console.error("Error sending Docebo webhook:", error.message);
-    res.status(500).send({ status: "error", message: error.message });
-  }
 }
