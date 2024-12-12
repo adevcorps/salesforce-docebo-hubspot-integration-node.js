@@ -1,4 +1,3 @@
-const { ContentLanguageCloneRequestVNext } = require('@hubspot/api-client/lib/codegen/cms/pages');
 const axios  = require('axios');
 require('dotenv').config();
 
@@ -11,6 +10,8 @@ const CLIENT_NAME = process.env.DOCEBO_API_CLIENT_NAME
 const CLIENT_SECRET = process.env.DOCEBO_API_CLIENT_SECRET
 const GRANT_TYPE = process.env.DOCEBO_API_GRANT_TYPE
 const API_SCOPE = process.env.DOCEBO_API_SCOPE
+const USER_NAME = process.env.DOCEBO_API_USER_NAME
+const PASSWORD = process.env.DOCEBO_API_PASSWORD
 const REFRESH_INTERVAL = 50 * 60 * 1000;
 
 async function fetchAccessToken(){
@@ -21,7 +22,9 @@ async function fetchAccessToken(){
                 grant_type: GRANT_TYPE,
                 client_id: CLIENT_NAME,
                 client_secret: CLIENT_SECRET,
-                scope: API_SCOPE
+                scope: API_SCOPE,
+                username: USER_NAME,
+                password:PASSWORD
             }),
             {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -38,12 +41,20 @@ async function fetchAccessToken(){
     }
 }
 
-function getAccessToken() {
-    if( !accessToken || Date.now() > tokenExpiryTime ) {
+async function getAccessToken() {
+    const MAX_RETRIES = 5;
+    const RETRY_DELAY = 1000;
+    let retries = 0;
+
+    while( (!accessToken || Date.now() > tokenExpiryTime) && retries < MAX_RETRIES ) {
         console.warn('Access token expired or not fetched yet');
-        throw new error('Access token is not available');
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
+        retries ++;
     }
-    accessToken;
+    if (!accessToken || Date.now() > tokenExpiryTime) {
+        throw new Error('Access token is not available after retries');
+    }
+    return accessToken;
 }
 
 async function startTokenRefresh(){
@@ -59,5 +70,6 @@ async function startTokenRefresh(){
 
 module.exports = {
     startTokenRefresh,
-    getAccessToken
+    getAccessToken,
+    fetchAccessToken
 }
