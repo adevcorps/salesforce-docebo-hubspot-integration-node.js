@@ -8,7 +8,6 @@ module.exports = async function getApiData (method, url, payload) {
     console.log("***********************");
     console.log(accessToken, method, url);
     console.log("***********************");
-    // return;
     try {
         const response = await axios({
             method: method,
@@ -19,7 +18,7 @@ module.exports = async function getApiData (method, url, payload) {
                 'Content-Type': 'application/json'
             }
         })
-        return response.data;       
+        return response.data.data;       
     } catch (error) {
         return {
             status: '505',

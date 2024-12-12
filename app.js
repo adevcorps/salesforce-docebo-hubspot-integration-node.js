@@ -4,7 +4,7 @@ const cors = require('cors');
 const doceboRoutes = require("./platforms/docebo/doceboRoutes");
 const salesforceRoutes = require("./platforms/salesforce/salesforceRoutes");
 const hubspotRoutes = require("./platforms/hubspot/hubspotRoutes");
-const getUserList = require("./platforms/docebo/cron/contact");
+const doceBoContacts = require("./platforms/docebo/cron/contact");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -22,7 +22,7 @@ app.use((err, req, res, next) => {
 });
 
 ( async() => {
-  getUserList();
+  doceBoContacts.getPendingUsers();
 })();
 
 

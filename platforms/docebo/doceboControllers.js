@@ -32,3 +32,9 @@ exports.newUserCreated = async (req, res) => {
 
     res.status(200).send({ status: "success", message: "New user created" });
 }
+
+exports.mailVerificationPending = async(req, res) => {
+  const payload = req.body;
+  console.log("New User Updated in Docebo:", payload);
+  res.status(200).send({status: 'success'})
+}
