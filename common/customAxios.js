@@ -8,28 +8,18 @@ module.exports = async function getApiData (method, url, payload) {
     console.log("***********************");
     console.log(accessToken, method, url);
     console.log("***********************");
-    return;
+    // return;
     try {
-        axios({
+        const response = await axios({
             method: method,
             url: url,
+            data: payload,
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
             }
-        }).then(response => {
-            if (response.status == 200) {
-                return {
-                    status: '200',
-                    data:"error"
-                };
-            } else {
-                return {
-                    status: '400',
-                    data: 'status_error'
-                };
-            }
-        })       
+        })
+        return response.data;       
     } catch (error) {
         return {
             status: '505',
