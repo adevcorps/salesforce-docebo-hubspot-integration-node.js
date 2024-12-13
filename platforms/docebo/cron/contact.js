@@ -14,8 +14,14 @@ async function getPendingUsers(){
     
 }
 
+async function getUserInfo(userId){
+    let userInfo = await getApiData('GET', `${APP_BASE}/manage/v1/user/${userId}`, null);
+    return userInfo;
+}
+
 module.exports = {
     getUserList,
-    getPendingUsers
+    getPendingUsers,
+    getUserInfo
 }
 

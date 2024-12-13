@@ -25,7 +25,7 @@ app.use((err, req, res, next) => {
   doceBoContacts.getPendingUsers();
 })();
 
-
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+

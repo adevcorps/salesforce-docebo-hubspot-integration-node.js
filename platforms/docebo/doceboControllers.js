@@ -1,10 +1,8 @@
 const { processIncomingData, sendOutgoingData } = require("./doceboServices");
-
+const contact = require("./cron/contact");
 exports.handleWebhook = async (req, res) => {
   try {
     const data = req.body;
-    console.log("Incoming Docebo Webhook Data:", data);
-
     await processIncomingData(data);
     res.status(200).send({ status: "success", message: "Webhook processed" });
   } catch (error) {
@@ -16,7 +14,7 @@ exports.handleWebhook = async (req, res) => {
 exports.sendWebhook = async (req, res) => {
   try {
     const payload = req.body;
-    console.log("Outgoing Docebo Webhook Payload:", payload);
+    // console.log("Outgoing Docebo Webhook Payload:", payload);
 
     await sendOutgoingData(payload);
     res.status(200).send({ status: "success", message: "Webhook sent" });
@@ -28,13 +26,16 @@ exports.sendWebhook = async (req, res) => {
 
 exports.newUserCreated = async (req, res) => {
     const payload = req.body;
-    console.log("New User Created in Docebo:", payload);
-
+    console.log("User Created:", payload);
+    if(payload.event = 'user.created'){
+      let userInfo = await contact.getUserInfo(payload.payload.user_id);
+      console.log(userInfo);
+    }
     res.status(200).send({ status: "success", message: "New user created" });
 }
 
-exports.mailVerificationPending = async(req, res) => {
+exports.userUpdated = async(req, res) => {
   const payload = req.body;
-  console.log("New User Updated in Docebo:", payload);
+  console.log("User Updated:", payload);
   res.status(200).send({status: 'success'})
 }
